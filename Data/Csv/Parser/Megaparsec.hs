@@ -10,7 +10,6 @@
 -- A CSV parser. The parser here is RFC 4180 compliant, with the following
 -- extensions:
 --
---     * Empty lines are ignored.
 --     * Non-escaped fields may contain any characters except double-quotes,
 --       commas, carriage returns, and newlines.
 --     * Escaped fields may contain any characters (but double-quotes need
@@ -229,6 +228,7 @@ record
      -- ^ How to “parse” record to get the data of interest
   -> Parser a
 record del f = do
+  notFollowedBy eof -- to prevent reading empty line at the end of file
   r <- V.fromList <$!> (sepBy1 (field del) (blindByte del) <?> "a record")
   case C.runParser (f r) of
     Left msg -> conversionError msg
@@ -245,17 +245,17 @@ field del = label "a field" (escapedField <|> unescapedField del)
 -- | Parse an escaped field.
 
 escapedField :: Parser ByteString
-escapedField = do
-  void (char '"')
-  let escapedDq = label "escaped double-quote" ('"' <$ string "\"\"")
-      p = escapedDq <|> anyChar
-  BC8.pack <$!> manyTill p (char '"')
+escapedField =
+  BC8.pack <$!> between (char '"') (char '"') (many $ normalChar <|> escapedDq)
+  where
+    normalChar = noneOf "\"" <?> "unescaped character"
+    escapedDq  = label "escaped double-quote" ('"' <$ string "\"\"")
 {-# INLINE escapedField #-}
 
 -- | Parse an unescaped field (up to first)
 
 unescapedField :: Word8 -> Parser ByteString
-unescapedField del = BC8.pack <$!> manyTill anyChar (oneOf es)
+unescapedField del = BC8.pack <$!> many (noneOf es) -- anyChar (lookAhead $ oneOf es)
   where
     es = chr (fromIntegral del) : "\"\n\r"
 {-# INLINE unescapedField #-}
