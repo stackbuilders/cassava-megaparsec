@@ -11,9 +11,10 @@
 -- extensions:
 --
 --     * Non-escaped fields may contain any characters except double-quotes,
---       commas, carriage returns, and newlines.
---     * Escaped fields may contain any characters (but double-quotes need
---       to be escaped).
+--       commas (or generally delimiter characters), carriage returns, and
+--       newlines.
+--     * Escaped fields may contain any characters, but double-quotes need
+--       to be escaped.
 --
 -- The parser provides better error messages than the parser that comes with
 -- Cassava library, while being compatible with the rest of the library.
