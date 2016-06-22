@@ -52,9 +52,12 @@ spec = do
 
 decodeSpec :: Spec
 decodeSpec = do
-  let dec = decode NoHeader ""
+  let dec  = decode NoHeader ""
   it "decodes simple data" $
     dec "a,b,c\n" `shouldParse`
+      φ [["a", "b", "c"]]
+  it "decodes simple data skipping header" $
+    decode HasHeader "" "field1,field2,field3\na,b,c\n" `shouldParse`
       φ [["a", "b", "c"]]
   it "handles CRLF sequence correctly" $
     dec "a,b\r\nc,d\r\n" `shouldParse`
