@@ -22,6 +22,7 @@
 -- OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 -- USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+{-# LANGUAGE CPP               #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main (main) where
@@ -34,6 +35,10 @@ import Test.Hspec
 import Test.Hspec.Megaparsec
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Vector          as V
+
+#if !MIN_VERSION_base(4,8,0)
+import Control.Applicative ((<$>))
+#endif
 
 main :: IO ()
 main = hspec spec
