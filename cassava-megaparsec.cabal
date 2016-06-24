@@ -29,8 +29,8 @@ license:              MIT
 license-file:         LICENSE.md
 author:               Mark Karpov <markkarpov@openmailbox.org>
 maintainer:           Mark Karpov <markkarpov@openmailbox.org>
-homepage:             https://github.com/mrkkrp/cassava-megaparsec
-bug-reports:          https://github.com/mrkkrp/cassava-megaparsec/issues
+homepage:             https://github.com/stackbuilders/cassava-megaparsec
+bug-reports:          https://github.com/stackbuilders/cassava-megaparsec/issues
 category:             Text, Web, CSV, Parsing
 synopsis:             Megaparsec parser of CSV files that plays nicely with Cassava
 build-type:           Simple
