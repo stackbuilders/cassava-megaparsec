@@ -253,10 +253,10 @@ escapedField =
     escapedDq  = label "escaped double-quote" ('"' <$ string "\"\"")
 {-# INLINE escapedField #-}
 
--- | Parse an unescaped field (up to first)
+-- | Parse an unescaped field.
 
 unescapedField :: Word8 -> Parser ByteString
-unescapedField del = BC8.pack <$!> many (noneOf es) -- anyChar (lookAhead $ oneOf es)
+unescapedField del = BC8.pack <$!> many (noneOf es)
   where
     es = chr (fromIntegral del) : "\"\n\r"
 {-# INLINE unescapedField #-}
