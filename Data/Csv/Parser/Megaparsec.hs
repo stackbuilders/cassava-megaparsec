@@ -230,7 +230,7 @@ record
   -> Parser a
 record del f = do
   notFollowedBy eof -- to prevent reading empty line at the end of file
-  r <- V.fromList <$!> (sepBy1 (field del) (blindByte del) <?> "a record")
+  r <- V.fromList <$!> (sepBy1 (field del) (blindByte del) <?> "record")
   case C.runParser (f r) of
     Left msg -> conversionError msg
     Right x  -> return x
@@ -240,7 +240,7 @@ record del f = do
 -- format. The returned value is unescaped.
 
 field :: Word8 -> Parser Field
-field del = label "a field" (escapedField <|> unescapedField del)
+field del = label "field" (escapedField <|> unescapedField del)
 {-# INLINE field #-}
 
 -- | Parse an escaped field.
