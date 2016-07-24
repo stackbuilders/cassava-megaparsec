@@ -35,7 +35,7 @@ category:             Text, Web, CSV, Parsing
 synopsis:             Megaparsec parser of CSV files that plays nicely with Cassava
 build-type:           Simple
 description:          Megaparsec parser of CSV files that plays nicely with Cassava.
-extra-source-files:   CHANGELOG.md
+extra-doc-files:      CHANGELOG.md
                     , README.md
 
 source-repository head
