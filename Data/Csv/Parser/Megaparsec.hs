@@ -1,6 +1,6 @@
 -- |
 -- Module      :  Data.Csv.Parser.Megaparsec
--- Copyright   :  © 2016 Stack Builders
+-- Copyright   :  © 2016–2017 Stack Builders
 -- License     :  MIT
 --
 -- Maintainer  :  Mark Karpov <markkarpov@openmailbox.org>
