@@ -22,10 +22,11 @@
 {-# LANGUAGE BangPatterns       #-}
 {-# LANGUAGE CPP                #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE OverloadedStrings  #-}
 {-# LANGUAGE RecordWildCards    #-}
 
 module Data.Csv.Parser.Megaparsec
-  ( Cec (..)
+  ( ConversionError (..)
   , decode
   , decodeWith
   , decodeByName
@@ -34,7 +35,6 @@ where
 
 import Control.Monad
 import Data.ByteString (ByteString)
-import Data.Char (chr)
 import Data.Csv hiding
   ( Parser
   , record
@@ -49,15 +49,16 @@ import Data.Data
 import Data.Vector (Vector)
 import Data.Word (Word8)
 import Text.Megaparsec
-import qualified Data.ByteString.Char8 as BC8
-import qualified Data.ByteString.Lazy  as BL
-import qualified Data.Csv              as C
-import qualified Data.HashMap.Strict   as H
-import qualified Data.Set              as S
-import qualified Data.Vector           as V
+import Text.Megaparsec.Byte
+import qualified Data.ByteString      as B
+import qualified Data.ByteString.Lazy as BL
+import qualified Data.Csv             as C
+import qualified Data.HashMap.Strict  as H
+import qualified Data.Set             as S
+import qualified Data.Vector          as V
 
 #if !MIN_VERSION_base(4,8,0)
-import Control.Applicative ((*>), (<*), (<$))
+import Control.Applicative
 
 infixl 4 <$!>
 
@@ -75,31 +76,16 @@ f <$!> m = do
 -- | Custom error component for CSV parsing. It allows typed reporting of
 -- conversion errors.
 
-data Cec
-  = CecFail String
-  | CecIndentation Ordering Pos Pos
-  | CecConversionError String
+data ConversionError = ConversionError String
   deriving (Eq, Data, Typeable, Ord, Read, Show)
 
-instance ShowErrorComponent Cec where
-  showErrorComponent (CecFail msg) = msg
-  showErrorComponent (CecIndentation ord ref actual) =
-    "incorrect indentation (got " ++ show (unPos actual) ++
-    ", should be " ++ p ++ show (unPos ref) ++ ")"
-    where p = case ord of
-                LT -> "less than "
-                EQ -> "equal to "
-                GT -> "greater than "
-  showErrorComponent (CecConversionError msg) =
+instance ShowErrorComponent ConversionError where
+  showErrorComponent (ConversionError msg) =
     "conversion error: " ++ msg
 
-instance ErrorComponent Cec where
-  representFail        = CecFail
-  representIndentation = CecIndentation
+-- | Parser type that uses “custom error component” 'ConversionError'.
 
--- | Parser type that uses “custom error component” 'Cec'.
-
-type Parser = Parsec Cec BL.ByteString
+type Parser = Parsec ConversionError BL.ByteString
 
 ----------------------------------------------------------------------------
 -- Top level interface
@@ -115,7 +101,7 @@ decode :: FromRecord a
      -- ^ File name (use empty string if you have none)
   -> BL.ByteString
      -- ^ CSV data
-  -> Either (ParseError Char Cec) (Vector a)
+  -> Either (ParseError Word8 ConversionError) (Vector a)
 decode = decodeWith defaultDecodeOptions
 {-# INLINE decode #-}
 
@@ -130,7 +116,7 @@ decodeWith :: FromRecord a
      -- ^ File name (use empty string if you have none)
   -> BL.ByteString
      -- ^ CSV data
-  -> Either (ParseError Char Cec) (Vector a)
+  -> Either (ParseError Word8 ConversionError) (Vector a)
 decodeWith = decodeWithC csv
 {-# INLINE decodeWith #-}
 
@@ -142,7 +128,7 @@ decodeWith = decodeWithC csv
 decodeByName :: FromNamedRecord a
   => FilePath          -- ^ File name (use empty string if you have none)
   -> BL.ByteString     -- ^ CSV data
-  -> Either (ParseError Char Cec) (Header, Vector a)
+  -> Either (ParseError Word8 ConversionError) (Header, Vector a)
 decodeByName = decodeByNameWith defaultDecodeOptions
 {-# INLINE decodeByName #-}
 
@@ -152,7 +138,7 @@ decodeByNameWith :: FromNamedRecord a
   => DecodeOptions     -- ^ Decoding options
   -> FilePath          -- ^ File name (use empty string if you have none)
   -> BL.ByteString     -- ^ CSV data
-  -> Either (ParseError Char Cec) (Header, Vector a)
+  -> Either (ParseError Word8 ConversionError) (Header, Vector a)
 decodeByNameWith opts = parse (csvWithHeader opts)
 {-# INLINE decodeByNameWith #-}
 
@@ -170,7 +156,7 @@ decodeWithC
      -- ^ File name (use empty string if you have none)
   -> BL.ByteString
      -- ^ CSV data
-  -> Either (ParseError Char Cec) a
+  -> Either (ParseError Word8 ConversionError) a
 decodeWithC p opts@DecodeOptions {..} hasHeader = parse parser
   where
     parser = case hasHeader of
@@ -209,7 +195,7 @@ csvWithHeader !DecodeOptions {..} = do
 header :: Word8 -> Parser Header
 header del = V.fromList <$!> p <* eol
   where
-    p = sepBy1 (name del) (blindByte del) <?> "file header"
+    p = sepBy1 (name del) (void $ char del) <?> "file header"
 {-# INLINE header #-}
 
 -- | Parse a header name. Header names have the same format as regular
@@ -230,7 +216,7 @@ record
   -> Parser a
 record del f = do
   notFollowedBy eof -- to prevent reading empty line at the end of file
-  r <- V.fromList <$!> (sepBy1 (field del) (blindByte del) <?> "record")
+  r <- V.fromList <$!> (sepBy1 (field del) (void $ char del) <?> "record")
   case C.runParser (f r) of
     Left msg -> conversionError msg
     Right x  -> return x
@@ -247,18 +233,18 @@ field del = label "field" (escapedField <|> unescapedField del)
 
 escapedField :: Parser ByteString
 escapedField =
-  BC8.pack <$!> between (char '"') (char '"') (many $ normalChar <|> escapedDq)
+  B.pack <$!> between (char 34) (char 34) (many $ normalChar <|> escapedDq)
   where
-    normalChar = noneOf "\"" <?> "unescaped character"
-    escapedDq  = label "escaped double-quote" ('"' <$ string "\"\"")
+    normalChar = notChar 34 <?> "unescaped character"
+    escapedDq  = label "escaped double-quote" (34 <$ string "\"\"")
 {-# INLINE escapedField #-}
 
 -- | Parse an unescaped field.
 
 unescapedField :: Word8 -> Parser ByteString
-unescapedField del = BC8.pack <$!> many (noneOf es)
+unescapedField del = BL.toStrict <$> takeWhileP (Just "unescaped character") f
   where
-    es = chr (fromIntegral del) : "\"\n\r"
+    f x = x /= del && x /= 34 && x /= 10 && x /= 13
 {-# INLINE unescapedField #-}
 
 ----------------------------------------------------------------------------
@@ -267,9 +253,7 @@ unescapedField del = BC8.pack <$!> many (noneOf es)
 -- | End parsing signaling a “conversion error”.
 
 conversionError :: String -> Parser a
-conversionError msg = failure S.empty S.empty (S.singleton err)
-  where
-    err = CecConversionError msg
+conversionError = fancyFailure . S.singleton . ErrorCustom . ConversionError
 {-# INLINE conversionError #-}
 
 -- | Convert a 'Record' to a 'NamedRecord' by attaching column names. The
@@ -278,9 +262,3 @@ conversionError msg = failure S.empty S.empty (S.singleton err)
 toNamedRecord :: Header -> Record -> NamedRecord
 toNamedRecord hdr v = H.fromList . V.toList $ V.zip hdr v
 {-# INLINE toNamedRecord #-}
-
--- | Parse a byte of specified value and return unit.
-
-blindByte :: Word8 -> Parser ()
-blindByte = void . char . chr . fromIntegral
-{-# INLINE blindByte #-}
