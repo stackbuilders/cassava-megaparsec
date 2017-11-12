@@ -98,7 +98,8 @@ decode :: FromRecord a
   => HasHeader
      -- ^ Whether the data contains header that should be skipped
   -> FilePath
-     -- ^ File name (use empty string if you have none)
+     -- ^ File name (only for displaying in parse error messages, use empty
+     -- string if you have none)
   -> BL.ByteString
      -- ^ CSV data
   -> Either (ParseError Word8 ConversionError) (Vector a)
@@ -113,7 +114,8 @@ decodeWith :: FromRecord a
   -> HasHeader
      -- ^ Whether the data contains header that should be skipped
   -> FilePath
-     -- ^ File name (use empty string if you have none)
+     -- ^ File name (only for displaying in parse error messages, use empty
+     -- string if you have none)
   -> BL.ByteString
      -- ^ CSV data
   -> Either (ParseError Word8 ConversionError) (Vector a)
@@ -126,8 +128,11 @@ decodeWith = decodeWithC csv
 -- 'defaultDecodeOptions'.
 
 decodeByName :: FromNamedRecord a
-  => FilePath          -- ^ File name (use empty string if you have none)
-  -> BL.ByteString     -- ^ CSV data
+  => FilePath
+     -- ^ File name (only for displaying in parse error messages, use empty
+     -- string if you have none)
+  -> BL.ByteString
+     -- ^ CSV data
   -> Either (ParseError Word8 ConversionError) (Header, Vector a)
 decodeByName = decodeByNameWith defaultDecodeOptions
 {-# INLINE decodeByName #-}
@@ -135,9 +140,13 @@ decodeByName = decodeByNameWith defaultDecodeOptions
 -- | Like 'decodeByName', but lets you customize how the CSV data is parsed.
 
 decodeByNameWith :: FromNamedRecord a
-  => DecodeOptions     -- ^ Decoding options
-  -> FilePath          -- ^ File name (use empty string if you have none)
-  -> BL.ByteString     -- ^ CSV data
+  => DecodeOptions
+     -- ^ Decoding options
+  -> FilePath
+     -- ^ File name (only for displaying in parse error messages, use empty
+     -- string if you have none)
+  -> BL.ByteString
+     -- ^ CSV data
   -> Either (ParseError Word8 ConversionError) (Header, Vector a)
 decodeByNameWith opts = parse (csvWithHeader opts)
 {-# INLINE decodeByNameWith #-}
@@ -153,7 +162,8 @@ decodeWithC
   -> HasHeader
      -- ^ Whether to expect a header in the input
   -> FilePath
-     -- ^ File name (use empty string if you have none)
+     -- ^ File name (only for displaying in parse error messages, use empty
+     -- string if you have none)
   -> BL.ByteString
      -- ^ CSV data
   -> Either (ParseError Word8 ConversionError) a
