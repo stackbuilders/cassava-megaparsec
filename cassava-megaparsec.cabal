@@ -4,8 +4,8 @@ cabal-version:        1.18
 tested-with:          GHC==7.8.4, GHC==7.10.3, GHC==8.0.2, GHC==8.2.2, GHC==8.4.1
 license:              MIT
 license-file:         LICENSE.md
-author:               Mark Karpov <markkarpov@openmailbox.org>
-maintainer:           Mark Karpov <markkarpov@openmailbox.org>
+author:               Mark Karpov <markkarpov92@gmail.org>
+maintainer:           Mark Karpov <markkarpov92@gmail.org>
 homepage:             https://github.com/stackbuilders/cassava-megaparsec
 bug-reports:          https://github.com/stackbuilders/cassava-megaparsec/issues
 category:             Text, Web, CSV, Parsing
