@@ -3,7 +3,7 @@
 -- Copyright   :  © 2016–2018 Stack Builders
 -- License     :  MIT
 --
--- Maintainer  :  Mark Karpov <markkarpov@openmailbox.org>
+-- Maintainer  :  Mark Karpov <markkarpov92@gmail.org>
 -- Stability   :  experimental
 -- Portability :  portable
 --
@@ -58,7 +58,7 @@ import qualified Data.Set             as S
 import qualified Data.Vector          as V
 
 #if !MIN_VERSION_base(4,8,0)
-import Control.Applicative
+import Control.Applicative hiding (many, some)
 
 infixl 4 <$!>
 
