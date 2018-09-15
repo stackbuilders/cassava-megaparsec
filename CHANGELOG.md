@@ -1,3 +1,7 @@
+## Cassava Megaparsec 2.0.0
+
+* Works with Megaparsec 7.
+
 ## Cassava Megaparsec 1.0.0
 
 * Works with Megaparsec 6.

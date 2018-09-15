@@ -76,7 +76,7 @@ f <$!> m = do
 -- | Custom error component for CSV parsing. It allows typed reporting of
 -- conversion errors.
 
-data ConversionError = ConversionError String
+newtype ConversionError = ConversionError String
   deriving (Eq, Data, Typeable, Ord, Read, Show)
 
 instance ShowErrorComponent ConversionError where
@@ -102,7 +102,7 @@ decode :: FromRecord a
      -- string if you have none)
   -> BL.ByteString
      -- ^ CSV data
-  -> Either (ParseError Word8 ConversionError) (Vector a)
+  -> Either (ParseErrorBundle BL.ByteString ConversionError) (Vector a)
 decode = decodeWith defaultDecodeOptions
 {-# INLINE decode #-}
 
@@ -118,7 +118,7 @@ decodeWith :: FromRecord a
      -- string if you have none)
   -> BL.ByteString
      -- ^ CSV data
-  -> Either (ParseError Word8 ConversionError) (Vector a)
+  -> Either (ParseErrorBundle BL.ByteString ConversionError) (Vector a)
 decodeWith = decodeWithC csv
 {-# INLINE decodeWith #-}
 
@@ -133,7 +133,7 @@ decodeByName :: FromNamedRecord a
      -- string if you have none)
   -> BL.ByteString
      -- ^ CSV data
-  -> Either (ParseError Word8 ConversionError) (Header, Vector a)
+  -> Either (ParseErrorBundle BL.ByteString ConversionError) (Header, Vector a)
 decodeByName = decodeByNameWith defaultDecodeOptions
 {-# INLINE decodeByName #-}
 
@@ -147,7 +147,7 @@ decodeByNameWith :: FromNamedRecord a
      -- string if you have none)
   -> BL.ByteString
      -- ^ CSV data
-  -> Either (ParseError Word8 ConversionError) (Header, Vector a)
+  -> Either (ParseErrorBundle BL.ByteString ConversionError) (Header, Vector a)
 decodeByNameWith opts = parse (csvWithHeader opts)
 {-# INLINE decodeByNameWith #-}
 
@@ -166,7 +166,7 @@ decodeWithC
      -- string if you have none)
   -> BL.ByteString
      -- ^ CSV data
-  -> Either (ParseError Word8 ConversionError) a
+  -> Either (ParseErrorBundle BL.ByteString ConversionError) a
 decodeWithC p opts@DecodeOptions {..} hasHeader = parse parser
   where
     parser = case hasHeader of
@@ -182,7 +182,7 @@ decodeWithC p opts@DecodeOptions {..} hasHeader = parse parser
 csv :: FromRecord a
   => DecodeOptions     -- ^ Decoding options
   -> Parser (Vector a) -- ^ The parser that parses collection of records
-csv !DecodeOptions {..} = do
+csv DecodeOptions {..} = do
   xs <- sepEndBy1 (record decDelimiter parseRecord) eol
   eof
   return $! V.fromList xs
@@ -193,7 +193,7 @@ csvWithHeader :: FromNamedRecord a
   => DecodeOptions     -- ^ Decoding options
   -> Parser (Header, Vector a)
      -- ^ The parser that parser collection of named records
-csvWithHeader !DecodeOptions {..} = do
+csvWithHeader DecodeOptions {..} = do
   !hdr <- header decDelimiter
   let f = parseNamedRecord . toNamedRecord hdr
   xs   <- sepEndBy1 (record decDelimiter f) eol
@@ -245,7 +245,7 @@ escapedField :: Parser ByteString
 escapedField =
   B.pack <$!> between (char 34) (char 34) (many $ normalChar <|> escapedDq)
   where
-    normalChar = notChar 34 <?> "unescaped character"
+    normalChar = anySingleBut 34 <?> "unescaped character"
     escapedDq  = label "escaped double-quote" (34 <$ string "\"\"")
 {-# INLINE escapedField #-}
 
