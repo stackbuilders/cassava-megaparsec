@@ -20,7 +20,6 @@
 -- Cassava library, while being compatible with the rest of the library.
 
 {-# LANGUAGE BangPatterns       #-}
-{-# LANGUAGE CPP                #-}
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE OverloadedStrings  #-}
 {-# LANGUAGE RecordWildCards    #-}
@@ -56,19 +55,6 @@ import qualified Data.Csv             as C
 import qualified Data.HashMap.Strict  as H
 import qualified Data.Set             as S
 import qualified Data.Vector          as V
-
-#if !MIN_VERSION_base(4,8,0)
-import Control.Applicative hiding (many, some)
-
-infixl 4 <$!>
-
-(<$!>) :: Monad m => (a -> b) -> m a -> m b
-f <$!> m = do
-  x <- m
-  let z = f x
-  z `seq` return z
-{-# INLINE (<$!>) #-}
-#endif
 
 ----------------------------------------------------------------------------
 -- Custom error component and other types
