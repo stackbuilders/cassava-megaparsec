@@ -53,7 +53,6 @@ import qualified Data.ByteString      as B
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Csv             as C
 import qualified Data.HashMap.Strict  as H
-import qualified Data.Set             as S
 import qualified Data.Vector          as V
 
 ----------------------------------------------------------------------------
@@ -186,6 +185,13 @@ csvWithHeader DecodeOptions {..} = do
   eof
   return $ let !v = V.fromList xs in (hdr, v)
 
+-- | Convert a 'Record' to a 'NamedRecord' by attaching column names. The
+-- 'Header' and 'Record' must be of the same length.
+
+toNamedRecord :: Header -> Record -> NamedRecord
+toNamedRecord hdr v = H.fromList . V.toList $ V.zip hdr v
+{-# INLINE toNamedRecord #-}
+
 -- | Parse a header, including the terminating line separator.
 
 header :: Word8 -> Parser Header
@@ -214,7 +220,7 @@ record del f = do
   notFollowedBy eof -- to prevent reading empty line at the end of file
   r <- V.fromList <$!> (sepBy1 (field del) (void $ char del) <?> "record")
   case C.runParser (f r) of
-    Left msg -> conversionError msg
+    Left msg -> customFailure (ConversionError msg)
     Right x  -> return x
 {-# INLINE record #-}
 
@@ -242,19 +248,3 @@ unescapedField del = BL.toStrict <$> takeWhileP (Just "unescaped character") f
   where
     f x = x /= del && x /= 34 && x /= 10 && x /= 13
 {-# INLINE unescapedField #-}
-
-----------------------------------------------------------------------------
--- Helpers
-
--- | End parsing signaling a “conversion error”.
-
-conversionError :: String -> Parser a
-conversionError = fancyFailure . S.singleton . ErrorCustom . ConversionError
-{-# INLINE conversionError #-}
-
--- | Convert a 'Record' to a 'NamedRecord' by attaching column names. The
--- 'Header' and 'Record' must be of the same length.
-
-toNamedRecord :: Header -> Record -> NamedRecord
-toNamedRecord hdr v = H.fromList . V.toList $ V.zip hdr v
-{-# INLINE toNamedRecord #-}
