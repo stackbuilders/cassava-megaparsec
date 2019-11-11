@@ -1,3 +1,7 @@
+## Cassava Megaparsec 2.0.1
+
+* Add suppport for `megaparsec-8.0.0`
+
 ## Cassava Megaparsec 2.0.0
 
 * Works with Megaparsec 7.
