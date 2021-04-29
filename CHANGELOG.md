@@ -1,3 +1,7 @@
+## Cassava Megaparsec 2.0.3
+
+* Export `csv` and `csvWithHeader` parsers (solves #15)
+
 ## Cassava Megaparsec 2.0.2
 
 * Add suppport for `megaparsec-9.0.0`

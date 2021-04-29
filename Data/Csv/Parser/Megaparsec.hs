@@ -29,7 +29,9 @@ module Data.Csv.Parser.Megaparsec
   , decode
   , decodeWith
   , decodeByName
-  , decodeByNameWith )
+  , decodeByNameWith
+  , csv
+  , csvWithHeader )
 where
 
 import Control.Monad
