@@ -1,4 +1,4 @@
-## Cassava Megaparsec 2.1.0
+## Cassava Megaparsec 2.0.3
 
 * Exposing Internals
 

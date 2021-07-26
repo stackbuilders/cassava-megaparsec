@@ -20,7 +20,8 @@
 -- Cassava library, while being compatible with the rest of the library.
 
 module Data.Csv.Parser.Megaparsec
-  ( decode
+  ( ConversionError (..)
+  , decode
   , decodeWith
   , decodeByName
   , decodeByNameWith)
