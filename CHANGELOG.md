@@ -1,6 +1,6 @@
-## Cassava Megaparsec 2.0.3
+## Cassava Megaparsec 2.1.0
 
-* Export `csv` and `csvWithHeader` parsers (solves #15)
+* Exposing Internals
 
 ## Cassava Megaparsec 2.0.2
 
