@@ -1,3 +1,7 @@
+## Cassava Megaparsec 2.0.3
+
+* Exposing Internals
+
 ## Cassava Megaparsec 2.0.2
 
 * Add suppport for `megaparsec-9.0.0`

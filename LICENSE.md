@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright © 2016–2018 Stack Builders
+Copyright © 2016–2021 Stack Builders
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
