@@ -1,3 +1,7 @@
+## Cassava Megaparsec 2.0.4
+
+* Allow bytestring-0.11
+
 ## Cassava Megaparsec 2.0.3
 
 * Exposing Internals
