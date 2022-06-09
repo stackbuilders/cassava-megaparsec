@@ -60,9 +60,7 @@ for detailed per-function documentation.
 
 ## License
 
-Copyright © 2016–2022 Stack Builders
-
-Distributed under MIT license.
+MIT, see [the LICENSE file](LICENSE.md).
 
 ## Contributing
 
