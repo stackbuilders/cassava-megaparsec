@@ -60,6 +60,6 @@ for detailed per-function documentation.
 
 ## License
 
-Copyright © 2016–2021 Stack Builders
+Copyright © 2016–2022 Stack Builders
 
 Distributed under MIT license.
