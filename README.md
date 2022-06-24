@@ -60,7 +60,7 @@ for detailed per-function documentation.
 
 ## License
 
-MIT, see [the LICENSE file](LICENSE.md).
+MIT, see [the LICENSE file](LICENSE).
 
 ## Contributing
 
