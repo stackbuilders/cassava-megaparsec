@@ -3,7 +3,7 @@ version:              2.0.4
 cabal-version:        1.18
 tested-with:          GHC==7.10.3, GHC==8.0.2, GHC==8.2.2, GHC==8.4.3, GHC==8.6.1
 license:              MIT
-license-file:         LICENSE.md
+license-file:         LICENSE
 author:               Mark Karpov <markkarpov92@gmail.org>
 maintainer:           Mark Karpov <markkarpov92@gmail.org>
 homepage:             https://github.com/stackbuilders/cassava-megaparsec
@@ -30,7 +30,7 @@ library
                     , cassava          >= 0.4.2 && < 0.6
                     , megaparsec       >= 7.0   && < 10.0
                     , unordered-containers >= 0.2.7 && < 0.3
-                    , vector           >= 0.11  && < 0.13
+                    , vector           >= 0.11  && <= 0.13
   exposed-modules:    Data.Csv.Parser.Megaparsec
                     , Data.Csv.Parser.Megaparsec.Internals
   if flag(dev)
@@ -55,7 +55,7 @@ test-suite tests
                     , cassava-megaparsec
                     , hspec              >= 2.0  && < 3.0
                     , hspec-megaparsec   >= 2.0  && < 3.0
-                    , vector             >= 0.11 && < 0.13
+                    , vector             >= 0.11 && <= 0.13
   if flag(dev)
     ghc-options:      -Wall -Werror
   else
