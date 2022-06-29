@@ -60,6 +60,12 @@ for detailed per-function documentation.
 
 ## License
 
-Copyright © 2016–2021 Stack Builders
+MIT, see [the LICENSE file](LICENSE).
 
-Distributed under MIT license.
+## Contributing
+
+Do you want to contribute to this project? Please take a look at our [contributing guideline](/docs/CONTRIBUTING.md) to know how you can help us build it.
+
+---
+<img src="https://www.stackbuilders.com/media/images/Sb-supports.original.png" alt="Stack Builders" width="50%"></img>  
+[Check out our libraries](https://github.com/stackbuilders/) | [Join our team](https://www.stackbuilders.com/join-us/)
