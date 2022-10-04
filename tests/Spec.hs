@@ -3,17 +3,19 @@
 
 module Main (main) where
 
-import Data.ByteString (ByteString)
-import Data.Csv hiding (decode, decodeWith, decodeByName, decodeByNameWith)
-import Data.Csv.Parser.Megaparsec
-import Data.Vector (Vector)
-import Test.Hspec
-import Test.Hspec.Megaparsec
-import qualified Data.ByteString.Lazy as BL
-import qualified Data.Vector          as V
+import           Data.ByteString            (ByteString)
+import qualified Data.ByteString.Lazy       as BL
+import           Data.Csv                   hiding (decode, decodeByName,
+                                             decodeByNameWith, decodeWith)
+import           Data.Csv.Parser.Megaparsec
+import           Data.Vector                (Vector)
+import qualified Data.Vector                as V
+import qualified IncrementalSpec
+import           Test.Hspec
+import           Test.Hspec.Megaparsec
 
 #if !MIN_VERSION_base(4,8,0)
-import Control.Applicative ((<$>))
+import           Control.Applicative        ((<$>))
 #endif
 
 main :: IO ()
@@ -25,6 +27,7 @@ spec = do
   describe "decodeWith"       decodeWithSpec
   describe "decodeByName"     decodeByNameSpec
   describe "decodeByNameWith" decodeByNameWithSpec
+  describe "Incremental"      IncrementalSpec.spec
 
 decodeSpec :: Spec
 decodeSpec = do
