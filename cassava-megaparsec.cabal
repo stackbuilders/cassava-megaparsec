@@ -57,6 +57,7 @@ test-suite tests
                     , hspec              >= 2.0  && < 3.0
                     , hspec-megaparsec   >= 2.0  && < 3.0
                     , vector             >= 0.11 && < 0.13
+  other-modules:      IncrementalSpec
   if flag(dev)
     ghc-options:      -Wall -Werror
   else

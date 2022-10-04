@@ -1,8 +1,6 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Data.Csv.Parser.Megaparsec.Incremental (decodeHeader) where
 
-import           Data.ByteString                      (ByteString)
+import qualified Data.ByteString                      as B
 import           Data.ByteString.Lazy                 (fromStrict)
 import           Data.Csv                             (FromNamedRecord,
                                                        defaultDecodeOptions)
@@ -12,12 +10,20 @@ import qualified Data.Vector                          as V
 import           Text.Megaparsec                      (errorBundlePretty, parse)
 
 
--- | TODO: Add something here
+-- | TODO: Document params and function
 decodeHeader :: FromNamedRecord a => HeaderParser (V.Vector a)
-decodeHeader = PartialH (\bs ->
-    case parser (fromStrict bs) of
-      (Left parseError) -> FailH mempty (errorBundlePretty parseError)
-      (Right (h, r))    -> DoneH h r
-  )
+decodeHeader = PartialH (go . parser)
   where
-    parser = parse (csvWithHeader defaultDecodeOptions) ""
+    parser bs =
+      -- TODO: What to return if input is empty (e.g. when we reach the eof)?
+      if B.null bs
+        then Right (mempty, mempty)
+        else parse (csvWithHeader defaultDecodeOptions) "" (fromStrict bs)
+
+    -- | Collects results in a vector
+    go = go' V.empty
+    go' _ (Left pe) = FailH mempty (errorBundlePretty pe)
+    go' acc (Right (h, r)) =
+      if V.null r
+      then DoneH h acc
+      else PartialH $ \rbs -> go' (r <> acc) (parser rbs)
