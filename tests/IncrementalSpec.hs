@@ -26,8 +26,8 @@ dataFailure :: String
 dataFailure = unlines
   [ "name,age"
   , "Bart,10"
-  , "MrBurns,Unknown"
   , "Lisa,8"
+  , "MrBurns,Unknown"
   ]
 
 dataSuccess :: String
@@ -38,19 +38,34 @@ dataSuccess = unlines
   , "Maggie,1"
   ]
 
+runParserWithSteps :: String -> (HeaderParser (V.Vector Person), Int)
+runParserWithSteps text =
+  goParser 0 text decodeHeader
+
 decodingHeaderSpec :: Spec
 decodingHeaderSpec = do
-  describe "given csv with malformed input in the middle" $
-    it "returns FailH with the uncomsumed input and and error message" $
-      case goParser 0 dataFailure (decodeHeader :: HeaderParser (V.Vector Person)) of
-        FailH _ errorMsg -> "got \"Unknown\"" `isInfixOf` errorMsg
-        _                -> False
+  describe "given csv with malformed input in the middle" $ do
+    it "returns FailH with the uncomsumed input and error message" $
+      case runParserWithSteps dataFailure of
+        (FailH _ errorMsg, _) -> "got \"Unknown\"" `isInfixOf` errorMsg
+        _                     -> False
 
-  describe "given csv with all right input" $
+    it "performs three steps (2 partials + 1 fail) before failing" $
+      case runParserWithSteps dataFailure of
+        (FailH _ _, steps) -> DT.traceShowId steps == 3
+        _                  -> False
+
+  describe "given csv with all right input" $ do
     it "returns DoneH with the comsumed input" $
-      case goParser 0 dataSuccess (decodeHeader :: HeaderParser (V.Vector Person)) of
-        DoneH _ r -> V.length (DT.traceShowId r) == 3
-        _         -> False
+      case runParserWithSteps dataSuccess of
+        (DoneH h r, _) -> V.length h == 2 && V.length r == 3
+        _              -> False
+
+    it "performs four steps (3 partial + 1 done) before finishing" $
+      case runParserWithSteps dataSuccess of
+        (DoneH _ _, steps) -> (DT.traceShowId steps) == 4
+        _                  -> False
+
 
 -- | Helpers
 
@@ -63,12 +78,12 @@ feed input f =
     _                            -> f mempty
 
 -- Parses the given string until the end
-goParser :: Int -> String -> HeaderParser a -> HeaderParser a
-goParser !acc input (PartialH f) = goParser (acc + 1) input (feed input' f)
-  where
-    input' =
-      case uncons (lines input) of
-        Just (fl, nls) -> Just (fl, drop acc nls)
-        _              -> Nothing
-goParser _ _ r                   = r
-
+goParser :: Int -> String -> HeaderParser a -> (HeaderParser a, Int)
+goParser !acc input (PartialH f) =
+  goParser (acc + 1) input (feed input' f)
+    where
+      input' =
+        case uncons (lines input) of
+          Just (fl, nls) -> Just (fl, drop acc nls)
+          _              -> Nothing
+goParser acc _ r                   = (r, acc)
