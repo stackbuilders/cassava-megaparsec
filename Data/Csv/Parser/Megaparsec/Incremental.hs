@@ -10,20 +10,25 @@ import qualified Data.Vector                          as V
 import           Text.Megaparsec                      (errorBundlePretty, parse)
 
 
--- | TODO: Document params and function
-decodeHeader :: FromNamedRecord a => HeaderParser (V.Vector a)
-decodeHeader = PartialH (go . parser)
+-- | Parses incrementally using 'csvWithHeader' and 'defaultDecodeOptions'.
+--
+-- Note: Given an empty 'ByteString' will make the parser fail. Therefore, make
+-- sure you handle that one level above (before passing that to this parser).
+decodeHeader
+  :: FromNamedRecord a
+  => HeaderParser (V.Vector a)
+decodeHeader = PartialH go
   where
-    parser bs =
-      -- TODO: What to return if input is empty (e.g. when we reach the eof)?
-      if B.null bs
-        then Right (mempty, mempty)
-        else parse (csvWithHeader defaultDecodeOptions) "" (fromStrict bs)
+    parser =
+      parse (csvWithHeader defaultDecodeOptions) "" . fromStrict
 
-    -- | Collects results in a vector
-    go = go' V.empty
-    go' _ (Left pe) = FailH mempty (errorBundlePretty pe)
-    go' acc (Right (h, r)) =
+    -- | Collects header and results
+    go bs = go' bs mempty (parser bs)
+
+    go' bs _ (Left pe) =
+      FailH bs (errorBundlePretty pe)
+
+    go' _ acc (Right (h, r)) =
       if V.null r
       then DoneH h acc
-      else PartialH $ \rbs -> go' (r <> acc) (parser rbs)
+      else PartialH $ \rbs -> go' rbs (r <> acc) (parser rbs)
