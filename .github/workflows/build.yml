@@ -36,11 +36,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install zsh
-      - name: Install dependencies (macOS)
-        if: ${{ runner.os == 'macOS' }}
-        run: |
-          brew update
-          brew install zsh
       - name: Install Haskell tooling
         uses: haskell/actions/setup@v2
         with:
