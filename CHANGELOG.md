@@ -1,3 +1,7 @@
+## Cassava Megaparsec 2.1.0
+
+* Drop support for GHC<8.2.2
+
 ## Cassava Megaparsec 2.0.4
 
 * Allow bytestring-0.11
