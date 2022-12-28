@@ -1,6 +1,6 @@
 cabal-version:        3.0
 name:                 cassava-megaparsec
-version:              2.0.4
+version:              2.1.0
 tested-with:          GHC==8.2.2, GHC==8.4.3, GHC==8.6.1, GHC==8.10, GHC==9.0
 license:              MIT
 license-file:         LICENSE.md
