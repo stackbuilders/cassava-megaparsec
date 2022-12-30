@@ -1,6 +1,6 @@
 ## Cassava Megaparsec 2.1.0
 
-* Drop support for GHC<8.2.2
+* Drop support for GHC 8.0 and below
 
 ## Cassava Megaparsec 2.0.4
 
