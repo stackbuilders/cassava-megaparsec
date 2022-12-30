@@ -14,10 +14,9 @@ concurrency:
 
 jobs:
   haskell:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
         ghc: ['9.0', '8.10', '8.6.1', '8.4.3', '8.2']
 
     steps:
