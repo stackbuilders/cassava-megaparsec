@@ -4,7 +4,7 @@
 [![Hackage](https://img.shields.io/hackage/v/cassava-megaparsec.svg?style=flat)](https://hackage.haskell.org/package/cassava-megaparsec)
 [![Stackage Nightly](http://stackage.org/package/cassava-megaparsec/badge/nightly)](http://stackage.org/nightly/package/cassava-megaparsec)
 [![Stackage LTS](http://stackage.org/package/cassava-megaparsec/badge/lts)](http://stackage.org/lts/package/cassava-megaparsec)
-[![Build Status](https://travis-ci.org/stackbuilders/cassava-megaparsec.svg?branch=master)](https://travis-ci.org/stackbuilders/cassava-megaparsec)
+![Build Status](https://github.com/stackbuilders/cassava-megaparsec/actions/workflows/build.yml/badge.svg)
 
 The package provides alternative parser for the
 [Cassava](https://hackage.haskell.org/package/cassava) package written with
