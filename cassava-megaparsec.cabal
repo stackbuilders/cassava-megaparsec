@@ -41,6 +41,7 @@ library
                     , vector           >= 0.11  && < 0.13
   exposed-modules:    Data.Csv.Parser.Megaparsec
                     , Data.Csv.Parser.Megaparsec.Internals
+                    , Data.Csv.Parser.Megaparsec.Incremental
   if flag(dev)
     ghc-options:      -Wall -Werror
   else
@@ -64,6 +65,7 @@ test-suite tests
                     , hspec              >= 2.0  && < 3.0
                     , hspec-megaparsec   >= 2.0  && < 3.0
                     , vector             >= 0.11 && < 0.13
+  other-modules:      IncrementalSpec
   if flag(dev)
     ghc-options:      -Wall -Werror
   else
