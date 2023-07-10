@@ -35,8 +35,9 @@ jobs:
         run: |
           SDIST_PATH=$(ls dist-newstyle/sdist/cassava-megaparsec-*.tar.gz)
           curl -X POST \
+	   -- fail -i \
            -H 'Accept: text/plain' \
-           -H "Authorization: X-ApiKey \"$HACKAGE_API_KEY\"" \
+           -H "Authorization: X-ApiKey ${HACKAGE_API_KEY}" \
            --form "package=@${SDIST_PATH}" \
            "https://hackage.haskell.org/packages/candidates"
       - name: Generate documentation
