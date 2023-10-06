@@ -61,8 +61,10 @@ executable cassava-megaparsec-example
   hs-source-dirs:     example
   ghc-options:        -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:      base
+                    , cassava
                     , cassava-megaparsec
                     , text
+                    , vector
   default-language:   Haskell2010
 
 test-suite tests
