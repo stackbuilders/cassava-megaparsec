@@ -1,6 +1,6 @@
 # Cassava Megaparsec
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![License MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
@@ -90,6 +90,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Bodigrim"><img src="https://avatars.githubusercontent.com/u/2293557?v=4?s=100" width="100px;" alt="ˌbodʲɪˈɡrʲim"/><br /><sub><b>ˌbodʲɪˈɡrʲim</b></sub></a><br /><a href="https://github.com/stackbuilders/cassava-megaparsec/commits?author=Bodigrim" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://g0v.social/@felixonmars"><img src="https://avatars.githubusercontent.com/u/1006477?v=4?s=100" width="100px;" alt="Felix Yan"/><br /><sub><b>Felix Yan</b></sub></a><br /><a href="https://github.com/stackbuilders/cassava-megaparsec/commits?author=felixonmars" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Jagl257"><img src="https://avatars.githubusercontent.com/u/27145248?v=4?s=100" width="100px;" alt="Jorge Guerra Landázuri"/><br /><sub><b>Jorge Guerra Landázuri</b></sub></a><br /><a href="https://github.com/stackbuilders/cassava-megaparsec/commits?author=Jagl257" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.stackbuilders.com/news/author/justin-leitgeb"><img src="https://avatars.githubusercontent.com/u/9977?v=4?s=100" width="100px;" alt="Justin S. Leitgeb"/><br /><sub><b>Justin S. Leitgeb</b></sub></a><br /><a href="https://github.com/stackbuilders/cassava-megaparsec/commits?author=jsl" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
