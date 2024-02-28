@@ -1,6 +1,6 @@
 cabal-version:        2.0
 name:                 cassava-megaparsec
-version:              2.1.0
+version:              2.1.1
 tested-with:
   GHC==9.8.1
   GHC==9.6.3
