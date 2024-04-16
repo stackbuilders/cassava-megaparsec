@@ -23,7 +23,7 @@ jobs:
         id: set-matrix
         uses: kleidukos/get-tested@v0.1.7.0
         with:
-          cabal-file: get-tested.cabal
+          cabal-file: cassava-megaparsec.cabal
           ubuntu-version: latest
           version: 0.1.7.0
 
