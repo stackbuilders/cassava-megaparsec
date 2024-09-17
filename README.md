@@ -61,6 +61,27 @@ To pretty print a error message use the `parseErrorPretty` function from
 This should be enough to start using the package, please consult Haddocks
 for detailed per-function documentation.
 
+## Example
+
+To check an example using `cassava-megaparsec` check the code in the `example` directory.
+
+Given the following type:
+```haskell
+data Test = Test {a :: Char, b :: Char, c :: Char} deriving (Eq, Show, Generic)
+```
+And, the following csv file:
+```text
+a,ba,c
+```
+We get the following error:
+```
+example.csv:1:7:
+  |
+1 | a,ba,c
+  |       ^
+conversion error: expected Char, got "ba"
+```
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):

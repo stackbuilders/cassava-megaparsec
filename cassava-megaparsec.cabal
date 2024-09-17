@@ -55,6 +55,19 @@ library
                       -Wnoncanonical-monadfail-instances
   default-language:   Haskell2010
 
+executable cassava-megaparsec-example
+  main-is:            Main.hs
+  other-modules:      Paths_cassava_megaparsec
+  hs-source-dirs:     example
+  ghc-options:        -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:      base
+                    , cassava
+                    , cassava-megaparsec
+                    , text
+                    , vector
+                    , megaparsec
+  default-language:   Haskell2010
+
 test-suite tests
   main-is:            Spec.hs
   hs-source-dirs:     tests
